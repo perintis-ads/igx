@@ -1,12 +1,11 @@
 name = "ig-jsx"
 compatibility_date = "2023-01-01"
+main = "workers-site/index.js"
 workers_dev = true
-
-account_id = "d0cee2806ae09159b9385626cdb5b7dd"
-zone_id = "4bbe1a494fcb469115e5df710ed086c0"
 
 [site]
 bucket = "./assets"
+
 
 [vars]
 ENVIRONMENT = "dev"
