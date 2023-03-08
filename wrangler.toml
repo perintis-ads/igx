@@ -13,14 +13,14 @@ ENVIRONMENT = "dev"
 
 [env.staging]
 workers_dev = false
-route = ""staging.gramica.online/*
+route = "staging.gramica.online/*"
 
 [env.staging.vars]
 ENVIRONMENT = "staging"
 
 [env.production]
 workers_dev = false
-route = ""gramica.online/*
+route = "gramica.online/*"
 
 [env.production.vars]
 ENVIRONMENT = "production"
