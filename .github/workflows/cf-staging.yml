@@ -15,6 +15,5 @@ jobs:
       - name: deploy using wrangler 
         run: 'npm run deploy:staging'
         env:
-          CF_ACCOUNT_ID: ${{secrets.CF_ACCOUNT_ID}}
-          CF_ZONE_ID: ${{secrets.CF_ZONE_ID}}
-          CF_API_TOKEN: ${{secrets.CF_API_TOKEN}}
+          CLOUDFLARE_API_TOKEN: ${{secrets.CLOUDFLARE_API_TOKEN}}
+          CLOUDFLARE_ACCOUNT_ID: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}
