@@ -19,12 +19,18 @@ npm run local
 ```
 
 ## Deployment
+Manually upload to Cloudflare
 ```bash
-# Staging taging
+# Staging
 # https://staging.gramica.online
 npm run deploy:staging
 
-# Cloudflare workers local
+# Production
 # https://staging.gramica.online
 npm run deploy:prod
 ```
+
+CI/CD to cloudflare
+Upload automatically to Cloudflare
+replace origin tags : "staging" or "production"
+push to repo, and happy back to browser
