@@ -3,24 +3,45 @@ compatibility_date = "2023-01-01"
 main = "workers-site/index.js"
 workers_dev = true
 
+kv_namespaces = [
+  { binding = "IGCONFIG", id = "d4b1428e90424451994ccc8413ea306d", preview_id = "d4b1428e90424451994ccc8413ea306d" }
+]
+
 [site]
 bucket = "./assets"
 
-
 [vars]
 ENVIRONMENT = "dev"
+USERNAME = "admin"
+PASSWORD = "telo"
+SESSION_ID = "session"
+DOMAIN_ID = "domain"
 
 [env.staging]
 workers_dev = false
 route = "staging.gramica.online/*"
+kv_namespaces = [
+  { binding = "IGCONFIG", id = "da49c7188adc4127bfb0f90e52dca667", preview_id = "da49c7188adc4127bfb0f90e52dca667" }
+]
 
 [env.staging.vars]
 ENVIRONMENT = "staging"
+USERNAME = "admin"
+PASSWORD = "telo"
+SESSION_ID = "session"
+DOMAIN_ID = "domain"
 
 [env.production]
 workers_dev = false
 route = "gramica.online/*"
+kv_namespaces = [
+  { binding = "IGCONFIG", id = "93879d5b939543c0a320373b1c5960cb", preview_id = "93879d5b939543c0a320373b1c5960cb" }
+]
 
 [env.production.vars]
 ENVIRONMENT = "production"
+USERNAME = "admin"
+PASSWORD = "telo123"
+SESSION_ID = "session"
+DOMAIN_ID = "domain"
   
