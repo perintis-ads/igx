@@ -38,7 +38,7 @@ app.use('/admin/*', async (c, next) => {
     return auth(c, next)
 })
 
-// session setter getter
+// cookies session setter getter
 app.get('/admin/session', async (c) => {
     try {
         const session = await SessionModel.getSession(c)
@@ -50,6 +50,18 @@ app.get('/admin/session', async (c) => {
     return c.json({status: false, message: "INVALID SESSION VALUE"})
 })
 
+app.get('/admin/session/random', async (c) => {
+    try {
+        const session = await SessionModel.randomSession(c)
+        return c.json({status: true, data: session})
+    }
+    catch {  
+        console.log("ERROR GETTING SESSION")
+    }
+    return c.json({status: false, message: "INVALID SESSION VALUE"})
+})
+
+// save cookies session
 app.put('/admin/session', async (c) => {
     const data:any = await c.req.json()
     try {
@@ -89,6 +101,7 @@ app.get('/admin/domain/random', async (c) => {
     return c.json({status: false, message: "INVALID DOMAIN VALUE"})
 })
 
+// save domain
 app.put('/admin/domain', async (c) => {
     const data:any = await c.req.json()
     try {
