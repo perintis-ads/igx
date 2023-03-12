@@ -4,18 +4,23 @@ import { serveStatic } from 'hono/cloudflare-workers'
 import { basicAuth } from 'hono/basic-auth'
 
 import igModel from './models/igModel'
+import SessionModel from './models/sessionModel'
+
 import Profile from './pages/profile'
 import Home from './pages/home'
 import TagsPage from './pages/tags'
 import SearchPage from './pages/search'
 import MediaPage from './pages/media'
+import DomainModel from './models/domainModel'
 
 type Env = {
     IGCONFIG: KVNamespace
     USERNAME: string
     PASSWORD: string
     SESSION_ID: string
+    SESSION_COUNT: number
     DOMAIN_ID: string
+    DOMAIN_COUNT: number
 }
 const app = new Hono<{Bindings:Env}>()
 
@@ -36,7 +41,7 @@ app.use('/admin/*', async (c, next) => {
 // session setter getter
 app.get('/admin/session', async (c) => {
     try {
-        const session = await c.env.IGCONFIG.get(c.env.SESSION_ID, 'json')
+        const session = await SessionModel.getSession(c)
         return c.json({status: true, data: session})
     }
     catch {  
@@ -49,8 +54,10 @@ app.put('/admin/session', async (c) => {
     const data:any = await c.req.json()
     try {
         if (data && data.session && data.session.length) {
-            await c.env.IGCONFIG.put(c.env.SESSION_ID, JSON.stringify(data.session));
-            return c.json({status: true, message: "SESSION SAVED!"})
+            let update = await SessionModel.putSession(c, data.session)
+            if (update) {
+                return c.json({status: true, message: "SESSION SAVED!"})
+            }
         }
     }
     catch {  
@@ -62,8 +69,19 @@ app.put('/admin/session', async (c) => {
 //domain setter getter
 app.get('/admin/domain', async (c) => {
     try {
-        const session = await c.env.IGCONFIG.get(c.env.DOMAIN_ID, 'json')
-        return c.json({status: true, data: session})
+        const domain = await DomainModel.getDomain(c)
+        return c.json({status: true, data: domain})
+    }
+    catch {  
+        console.log("ERROR GETTING DOMAIN")
+    }
+    return c.json({status: false, message: "INVALID DOMAIN VALUE"})
+})
+
+app.get('/admin/domain/random', async (c) => {
+    try {
+        const domain = await DomainModel.randomDomain(c)
+        return c.json({status: true, data: domain})
     }
     catch {  
         console.log("ERROR GETTING DOMAIN")
@@ -75,7 +93,7 @@ app.put('/admin/domain', async (c) => {
     const data:any = await c.req.json()
     try {
         if (data && data.domain && data.domain.length) {
-            await c.env.IGCONFIG.put(c.env.DOMAIN_ID, JSON.stringify(data.domain));
+            await DomainModel.putDomain(c, data.domain)
             return c.json({status: true, message: "DOMAIN SAVED!"})
         }
     }
@@ -85,6 +103,8 @@ app.put('/admin/domain', async (c) => {
     return c.json({status: false, message: "INVALID DOMAIN REQUEST"})
 })
 
+
+// HomePage
 app.get('/', async (c) => {
     return c.html(<Home title="Homepage is awesome" />)
 })

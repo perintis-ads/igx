@@ -15,7 +15,9 @@ ENVIRONMENT = "dev"
 USERNAME = "admin"
 PASSWORD = "telo"
 SESSION_ID = "session"
+SESSION_COUNT = 5
 DOMAIN_ID = "domain"
+DOMAIN_COUNT = 5
 
 [env.staging]
 workers_dev = false
@@ -29,7 +31,9 @@ ENVIRONMENT = "staging"
 USERNAME = "admin"
 PASSWORD = "telo"
 SESSION_ID = "session"
+SESSION_COUNT = 5
 DOMAIN_ID = "domain"
+DOMAIN_COUNT = 5
 
 [env.production]
 workers_dev = false
