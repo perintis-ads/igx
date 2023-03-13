@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { prettyJSON } from 'hono/pretty-json'
 import { serveStatic } from 'hono/cloudflare-workers'
 import { basicAuth } from 'hono/basic-auth'
+import { cache } from 'hono/cache'
 
 import igModel from './models/igModel'
 import SessionModel from './models/sessionModel'
@@ -27,7 +28,9 @@ const app = new Hono<{Bindings:Env}>()
 app.use('*', prettyJSON())
 
 // cdn repository folder at ./asstes/static
+app.get('/static/*', cache({ cacheName: 'cdn-static', cacheControl: 'max-age=3600'}))
 app.get('/static/*', serveStatic({ root: './' }))
+
 
 // admin area
 app.use('/admin/*', async (c, next) => {
