@@ -22,6 +22,7 @@ type Env = {
     SESSION_COUNT: number
     DOMAIN_ID: string
     DOMAIN_COUNT: number
+    CACHE_CONTROL_SECONDS: number
 }
 const app = new Hono<{Bindings:Env}>()
 
@@ -122,10 +123,27 @@ app.put('/admin/domain', async (c) => {
 
 // HomePage
 app.get('/', async (c) => {
-    return c.html(<Home title="Homepage is awesome" />)
+    const cacheKey = c.req.url
+    const cache = caches.default;
+
+    // check cache to Cloudflare
+    let response  = await cache.match(cacheKey);
+    if (!response ) {
+        console.log('No cache, get one!')
+        response = c.html(<Home title="Homepage is awesome" />)
+
+        const cacheSecond = c.env.CACHE_CONTROL_SECONDS || 3600
+        response.headers.append('Cache-Control', `max-age=${cacheSecond}`);
+
+        // store cache to Cloudflare for later use until expiration by cache-control
+        await cache.put(cacheKey, response.clone())
+        response.headers.append('CF-Cache-Status', 'MISS');
+    } 
+    else {
+        console.log(`Cache hit for: ${cacheKey}.`);
+    }
+    return response
 })
-
-
 
 
 app.get('/media/:id', async (c) => {
